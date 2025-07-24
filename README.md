@@ -1,34 +1,56 @@
-# react-native-media-size
+# 📸 react-native-media-size
 
-"Get image size correctly"
+A simple React Native native module for retrieving **accurate image dimensions** (width & height) from `content://` URIs on **Android** devices using the `MediaSize` API.
 
-## Installation
+> ✅ Android only  
+> ❌ Not compatible with iOS
 
+---
+
+## 🚀 Features
+
+- 🔍 Retrieve image size from Android `MediaSize`
+- ⚡ Works with `content://` URIs (e.g. selected images from gallery)
+- 📦 Lightweight and easy to use
+- 🔧 Written in Kotlin + TypeScript
+- 💬 Fully typed API
+
+---
+
+## 📦 Installation
+
+Using npm:
 
 ```sh
 npm install react-native-media-size
 ```
-
-
+```sh
+yarn add react-native-media-size
+```
 ## Usage
 
 
 ```js
-import { multiply } from 'react-native-media-size';
+import { getImageSize } from 'react-native-media-size';
 
-// ...
+type ImageSize = {
+  width: number;
+  height: number;
+};
 
-const result = multiply(3, 7);
+const uri = 'content://media/external/images/media/123';
+
+try {
+  const size = await getImageSize(uri);
+  console.log('Image size:', size.width, size.height);
+} catch (error) {
+  console.error('Failed to get image size:', error);
+}
 ```
-
-
-## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
 ## License
 
-MIT
+MIT © Görkem Başaran
 
 ---
 
