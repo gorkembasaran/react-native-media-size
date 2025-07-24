@@ -47,6 +47,42 @@ try {
   console.error('Failed to get image size:', error);
 }
 ```
+## Example Utility Wrapper
+
+
+```js
+utils/getImageRealSize
+import { getImageSize } from 'react-native-media-size';
+
+export const fetchImageSize = async (imageUri: string) => {
+  try {
+    const size = await getImageSize(imageUri);
+    return size;
+  } 
+  catch (err) {
+    console.error('❌ Resim boyutu alınamadı:', err);
+  }
+};
+```
+## Platform Check Usage
+
+```js
+const [selectedPhoto, setSelectedPhoto] = useState<string | undefined>(undefined);
+
+import { fetchImageSize } from '../../utils/getRealImageSize';
+
+if (Platform.OS === 'android' && selectedPhoto.startsWith('content://')) {
+    const realSize = await fetchImageSize(selectedPhoto);
+    if (realSize) {
+      originalWidth = realSize.width;
+      originalHeight = realSize.height;
+    } 
+    else {
+      console.warn('cannot get');
+    }
+  }
+```
+
 
 ## License
 
