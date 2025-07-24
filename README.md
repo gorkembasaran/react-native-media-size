@@ -60,7 +60,7 @@ export const fetchImageSize = async (imageUri: string) => {
     return size;
   } 
   catch (err) {
-    console.error('❌ Resim boyutu alınamadı:', err);
+    console.error('Cannot get image size:', err);
   }
 };
 ```
