@@ -6,11 +6,12 @@ import androidx.exifinterface.media.ExifInterface
 import com.facebook.react.bridge.*
 import java.io.InputStream
 
-class MediaSizeModule(reactContext: ReactApplicationContext) : NativeMediaSizeSpec(reactContext) {
+class MediaSizeModule(private val reactContext: ReactApplicationContext) : NativeMediaSizeSpec(reactContext) {
+
   override fun getImageSize(uriString: String, promise: Promise) {
     try {
       val uri = Uri.parse(uriString)
-      val inputStream: InputStream? = reactApplicationContext.contentResolver.openInputStream(uri)
+      val inputStream: InputStream? = reactContext.contentResolver.openInputStream(uri)
 
       if (inputStream == null) {
         promise.reject("NO_INPUT_STREAM", "Cannot open input stream.")
@@ -24,7 +25,7 @@ class MediaSizeModule(reactContext: ReactApplicationContext) : NativeMediaSizeSp
       var width = options.outWidth
       var height = options.outHeight
 
-      val exifStream = reactApplicationContext.contentResolver.openInputStream(uri)
+      val exifStream = reactContext.contentResolver.openInputStream(uri)
       if (exifStream != null) {
         val exif = ExifInterface(exifStream)
         val orientation = exif.getAttributeInt(
@@ -46,6 +47,33 @@ class MediaSizeModule(reactContext: ReactApplicationContext) : NativeMediaSizeSp
       result.putInt("height", height)
       promise.resolve(result)
 
+    } catch (e: Exception) {
+      promise.reject("ERROR", e.message, e)
+    }
+  }
+
+  @ReactMethod
+  override fun isImageMirrored(uriString: String, promise: Promise) {
+    try {
+      val uri = Uri.parse(uriString)
+      val exifStream: InputStream? = reactContext.contentResolver.openInputStream(uri)
+
+      if (exifStream == null) {
+        promise.reject("NO_INPUT_STREAM", "Cannot open input stream.")
+        return
+      }
+
+      val exif = ExifInterface(exifStream)
+      exifStream.close()
+
+      val orientation = exif.getAttributeInt(
+        ExifInterface.TAG_ORIENTATION,
+        ExifInterface.ORIENTATION_NORMAL
+      )
+
+      val isMirrored = orientation == ExifInterface.ORIENTATION_FLIP_HORIZONTAL
+
+      promise.resolve(isMirrored)
     } catch (e: Exception) {
       promise.reject("ERROR", e.message, e)
     }

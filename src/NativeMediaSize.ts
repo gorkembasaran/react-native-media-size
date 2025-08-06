@@ -3,6 +3,7 @@ import { TurboModuleRegistry } from 'react-native';
 
 export interface Spec extends TurboModule {
   getImageSize(uri: string): Promise<{ width: number; height: number }>;
+  isImageMirrored(uri: string): Promise<boolean>;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('MediaSize');

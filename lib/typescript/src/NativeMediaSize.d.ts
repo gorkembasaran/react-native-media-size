@@ -4,6 +4,7 @@ export interface Spec extends TurboModule {
         width: number;
         height: number;
     }>;
+    isImageMirrored(uri: string): Promise<boolean>;
 }
 declare const _default: Spec;
 export default _default;
